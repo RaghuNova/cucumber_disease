@@ -210,6 +210,8 @@ The web application will open on: **`http://localhost:5173`**
 
 ## 8. AWS EC2 Production Deployment Guide
 
+> 📖 **Comprehensive Containerized Guide**: See [AWS_EC2_DEPLOYMENT.md](file:///Users/ananyan/Documents/cucumber_leaf/AWS_EC2_DEPLOYMENT.md) for the complete, step-by-step production guide with Docker Compose, Elastic IP, Swap optimization, SSL setup, and auto-restart.
+
 To deploy both frontend and backend on a single AWS EC2 CPU instance:
 
 ### Step 1: Provision EC2 Instance

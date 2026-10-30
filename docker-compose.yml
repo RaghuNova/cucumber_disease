@@ -1,0 +1,53 @@
+services:
+  backend:
+    platform: linux/amd64
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: cucumbercare-backend:latest
+    container_name: cucumbercare-backend
+    restart: unless-stopped
+    expose:
+      - "8000"
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - GROQ_API_KEY=${GROQ_API_KEY:-}
+      - PORT=8000
+      - HOST=0.0.0.0
+      - HF_HOME=/root/.cache/huggingface
+    volumes:
+      - model_cache:/root/.cache/huggingface
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/api/health || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks:
+      - cucumbercare-net
+
+  frontend:
+    platform: linux/amd64
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: cucumbercare-frontend:latest
+    container_name: cucumbercare-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - cucumbercare-net
+
+volumes:
+  model_cache:
+    name: cucumbercare_model_cache
+    driver: local
+
+networks:
+  cucumbercare-net:
+    name: cucumbercare_network
+    driver: bridge
